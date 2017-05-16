@@ -1,0 +1,52 @@
+/*#leGrid {
+    width: 880px;
+    height: 880px;
+    margin-top: 80px;
+    background: #000000;
+}
+.row {
+    width: auto;
+    background: #313131;
+}
+.square {
+    width: 80px;
+    height: 80px;
+    margin: 0px;
+    outline: 1px solid;
+    display: inline-block;
+    background: #FFFFFF;
+}
+
+.square.vacio {
+    outline: none;
+    text-align: center;
+    line-height: 80px;
+}*/
+
+#leGrid {
+    width: 440px;
+    height: 440px;
+}
+
+.row {
+    width: auto;
+    display: flex;
+}
+
+.square {
+    width: 40px;
+    height: 40px;
+    outline: 1px solid blue;
+}
+
+.square.vacio {
+    outline: none;
+    text-align: center;
+    line-height: 40px;
+}
+
+#caja {
+    height: 50px;
+    width: auto;
+}
+
