@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootApplication
@@ -17,7 +18,7 @@ public class SalvoApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(PlayerRepository playerRepo, GameRepository gameRepo, GamePlayerRepository gamePlayerRepo, ShipRepository shipRepo) {
+	public CommandLineRunner initData(PlayerRepository playerRepo, GameRepository gameRepo, GamePlayerRepository gamePlayerRepo, ShipRepository shipRepo, SalvoRepository salvoRepo, ScoreRepository scoreRepo) {
 		return (args) -> {
 			// save a couple of customers
 			Player p1 = new Player("j.bauer@cto.gov");
@@ -89,9 +90,69 @@ public class SalvoApplication {
 			shipRepo.save(sh9);
 			shipRepo.save(sh10);
 
+			List<String> slv1 = new ArrayList<>(Arrays.asList("A1", "H7", "J4"));
+			List<String> slv2 = new ArrayList<>(Arrays.asList("A2", "B5", "D9"));
+			List<String> slv3 = new ArrayList<>(Arrays.asList("A3", "I3", "G3"));
+			List<String> slv4 = new ArrayList<>(Arrays.asList("B1", "F8", "C4"));
+			List<String> slv5 = new ArrayList<>(Arrays.asList("B2", "D5", "H6"));
+			List<String> slv6 = new ArrayList<>(Arrays.asList("B3", "F1", "I7"));
+			List<String> slv7 = new ArrayList<>(Arrays.asList("C5", "C7", "C9"));
+			List<String> slv8 = new ArrayList<>(Arrays.asList("C6", "G4", "H2"));
+			List<String> slv9 = new ArrayList<>(Arrays.asList("C7", "A5", "B3"));
+			List<String> slv10 = new ArrayList<>(Arrays.asList("D2", "H5", "I8"));
+			List<String> slv11 = new ArrayList<>(Arrays.asList("D3", "E4", "F5"));
+			List<String> slv12 = new ArrayList<>(Arrays.asList("D4", "J7", "E1"));
+			List<String> slv13 = new ArrayList<>(Arrays.asList("E2", "E4", "E9"));
 
+			Salvo shot1 = new Salvo(1, slv1);
+			Salvo shot2 = new Salvo(1, slv2);
+			Salvo shot11 = new Salvo(1, slv10);
+			Salvo shot3 = new Salvo(2, slv3);
+			Salvo shot4 = new Salvo(2, slv4);
+			Salvo shot41 = new Salvo(2, slv11);
+			Salvo shot5 = new Salvo(3, slv5);
+			Salvo shot6 = new Salvo(3, slv6);
+			Salvo shot61 = new Salvo(3, slv12);
+			Salvo shot7 = new Salvo(4, slv7);
+			Salvo shot8 = new Salvo(4, slv8);
+			Salvo shot81 = new Salvo(4, slv13);
+			Salvo shot9 = new Salvo(5, slv9);
 
+			gp1.addSalvo(shot1);
+			gp2.addSalvo(shot2);
+			gp1.addSalvo(shot3);
+			gp2.addSalvo(shot4);
+			gp1.addSalvo(shot5);
+			gp2.addSalvo(shot6);
+			gp3.addSalvo(shot11);
+			gp3.addSalvo(shot41);
+			gp3.addSalvo(shot61);
+
+			salvoRepo.save(shot1);
+			salvoRepo.save(shot11);
+			salvoRepo.save(shot2);
+			salvoRepo.save(shot3);
+			salvoRepo.save(shot4);
+			salvoRepo.save(shot41);
+			salvoRepo.save(shot5);
+			salvoRepo.save(shot6);
+			salvoRepo.save(shot61);
+			salvoRepo.save(shot7);
+			salvoRepo.save(shot8);
+			salvoRepo.save(shot81);
+			salvoRepo.save(shot9);
+
+			Date dt1 = new Date();
+			Date dt2 = new Date();
+			Score scr1 = new Score(dt1,1,gp1);
+			Score scr2 = new Score(dt1,0,gp2);
+			Score scr3 = new Score(dt2,0.5,gp3);
+
+			scoreRepo.save(scr1);
+			scoreRepo.save(scr2);
+			scoreRepo.save(scr3);
 
 		};
 	}
+
 }

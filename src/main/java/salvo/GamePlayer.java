@@ -29,6 +29,9 @@ public class GamePlayer {
     @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
     private Set<Ship> ships = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
+    private Set<Salvo> salvoes = new LinkedHashSet<>();
+
     public GamePlayer() {
 
     }
@@ -81,6 +84,24 @@ public class GamePlayer {
     public void addShip(Ship ship){
         ship.setGamePlayer(this);
         ships.add(ship);
+    }
+
+    public Set<Salvo> getSalvoes() {
+        return salvoes;
+    }
+
+    public void addSalvo(Salvo salvo){
+        salvo.setGamePlayer(this);
+        salvoes.add(salvo);
+    }
+
+    public void getScore(GamePlayer gamePlayer) {
+        gamePlayer.getPlayer().getTotalScore();
+    }
+
+    public Score getScore() {
+
+        return player.isPlaying(this.game);
     }
 }
 

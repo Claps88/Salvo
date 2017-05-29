@@ -19,6 +19,8 @@ public class SalvoController {
     private GameRepository gameRepo;
     @Autowired
     private GamePlayerRepository gpRepo;
+    @Autowired
+    private PlayerRepository playerRepo;
 
     @RequestMapping("/games")
     public Map<String, Object> getIds() {
@@ -26,6 +28,20 @@ public class SalvoController {
         dto.put("games", gameRepo.findAll().stream()
                 .map(game -> gameInfo(game))
                 .collect(Collectors.toList()));
+        dto.put("score", playerRepo.findAll().stream()
+                .map(player -> scoreInfo(player))
+                .collect(Collectors.toList()));
+        return dto;
+    }
+
+    private Map<String, Object> scoreInfo(Player player){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("playerId", player.getId());
+        dto.put("email", player.getUserName());
+        dto.put("totalScore", player.getTotalScore());
+        dto.put("wins", player.getWins());
+        dto.put("draws", player.getDraws());
+        dto.put("losses", player.getLosses());
         return dto;
     }
 
@@ -43,6 +59,12 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", gamePlayer.getId());
         dto.put("player", getP(gamePlayer.getPlayer()));
+        if(gamePlayer.getScore() != null) {
+            dto.put("score", gamePlayer.getScore().getScore());
+        }
+        else{
+            dto.put("score", null);
+        }
         return dto;
     }
 
@@ -66,29 +88,58 @@ public class SalvoController {
         dto.put("ships", currentGP.getShips().stream()
                 .map(ship -> fleet(ship))
                 .collect(Collectors.toList()));
+        dto.put("salvoes", currentGame.getGamePlayers().stream()
+                .map(gp -> salvoGPs(gp))
+                .collect(Collectors.toList()));
         return dto;
     }
 
-    public Map<String, Object> findGP(GamePlayer gamePlayer){
+    private Map<String, Object> findGP(GamePlayer gamePlayer){
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", gamePlayer.getId());
         dto.put("player", findPL(gamePlayer.getPlayer()));
         return dto;
     }
 
-    public Map<String, Object> findPL(Player player){
+    private Map<String, Object> findPL(Player player){
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", player.getId());
         dto.put("email", player.getUserName());
         return dto;
     }
 
-    public Map<String, Object> fleet(Ship ship){
+    private Map<String, Object> fleet(Ship ship){
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("type", ship.getShipType());
         dto.put("locations", ship.getLocations());
         return dto;
     }
+
+    private Map<String, Object> salvoInfo(Salvo salvo){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("turn", salvo.getTurnNr());
+        dto.put("players", salvo.getGamePlayer().getPlayer().getId());
+        dto.put("locations", salvo.getLocation());
+        return dto;
+    }
+
+    private List<Map<String, Object>> salvoGPs(GamePlayer gamePlayer){
+
+        Set<Salvo> salvos = gamePlayer.getSalvoes();
+        List<Map<String, Object>> dto2 = new ArrayList<>();
+
+
+
+        for (Salvo salvo : salvos) {
+            Map<String, Object> dto = new LinkedHashMap<>();
+            dto.put("turn", salvo.getTurnNr());
+            dto.put("player", salvo.getGamePlayer().getPlayer().getId());
+            dto.put("locations", salvo.getLocation());
+            dto2.add(dto);
+        }
+        return dto2;
+    }
+
 }
 
 

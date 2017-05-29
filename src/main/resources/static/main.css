@@ -23,9 +23,23 @@
     line-height: 80px;
 }*/
 
-#leGrid {
+h4 {
+    text-align: center;
+}
+
+#shipGrid {
+    margin-right: 150px;
     width: 440px;
     height: 440px;
+}
+
+#salvoGrid {
+    width: 440px;
+    height: 440px;
+}
+
+#contenedor {
+    display: flex;
 }
 
 .row {
@@ -43,6 +57,18 @@
     outline: none;
     text-align: center;
     line-height: 40px;
+}
+
+.ship {
+    background-color: black;
+}
+
+.salvo {
+    background-color: orange;
+}
+
+.hit {
+    background-color: red;
 }
 
 #caja {
