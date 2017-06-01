@@ -1,9 +1,12 @@
 package salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,8 +26,11 @@ public class SalvoController {
     private PlayerRepository playerRepo;
 
     @RequestMapping("/games")
-    public Map<String, Object> getIds() {
+    public Map<String, Object> getInfo(Authentication auth) {
+
         Map<String, Object> dto = new LinkedHashMap<>();
+
+        dto.put("currentPlayer", authInfo(auth));
         dto.put("games", gameRepo.findAll().stream()
                 .map(game -> gameInfo(game))
                 .collect(Collectors.toList()));
@@ -32,6 +38,21 @@ public class SalvoController {
                 .map(player -> scoreInfo(player))
                 .collect(Collectors.toList()));
         return dto;
+    }
+    private Map<String, Object> authInfo(Authentication authentication){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        if(authentication != null){
+            List<Player> wtv = playerRepo.findByUserName(authentication.getName());
+            Player blabla = wtv.get(0);
+            dto.put("id", blabla.getId());
+            dto.put("userName", blabla.getUserName());
+            return dto;
+        }
+        else return null;
+    }
+
+    private boolean isGuest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
     }
 
     private Map<String, Object> scoreInfo(Player player){
@@ -140,6 +161,21 @@ public class SalvoController {
         return dto2;
     }
 
+    @RequestMapping(path = "/players", method = RequestMethod.POST)
+    public ResponseEntity<String> createPlayer(@RequestParam String userName,@RequestParam String password) {
+
+        List <Player> player = playerRepo.findByUserName(userName);
+        if (userName.isEmpty()) {
+            return new ResponseEntity<>("No name given", HttpStatus.FORBIDDEN);
+        }
+
+        if (!player.isEmpty()) {
+            return new ResponseEntity<>("Name already used", HttpStatus.CONFLICT);
+        }
+
+        playerRepo.save(new Player(userName, password));
+        return new ResponseEntity<>( userName + "added", HttpStatus.CREATED);
+    }
 }
 
 

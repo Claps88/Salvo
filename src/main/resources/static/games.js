@@ -24,6 +24,7 @@ $(function() {
             })
             $listSelector.append($listCreator);
         });
+
     }*/
 
     function sortBig2Small(a, b) {
@@ -67,6 +68,23 @@ $(function() {
         row.append('<td>' + value.losses + '</td>');
         return row;
     }
+
+    /*function login(evt) {
+      evt.preventDefault();
+      var form = evt.target.form;
+      $.post("/login",
+             { username: form["username"].value,
+               password: form["password"].value })
+       .done(...)
+       .fail(...);
+    }
+
+    function logout(evt) {
+      evt.preventDefault();
+      $.post("/logout)
+       .done(...)
+       .fail(...);
+    }*/
 
     loadData();
 });
