@@ -48,7 +48,16 @@ public class Player {
         return Id + " " + userName;
     }
 
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
+    }
+
     public String getPassword() {
+
         return password;
     }
 

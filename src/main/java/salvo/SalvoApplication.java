@@ -42,6 +42,7 @@ public class SalvoApplication {
 			Player p2 = new Player("c.obrian@ctu.gov", "42");
 			Player p3 = new Player("kim_bauer@gmail.com", "kb");
 			Player p4 = new Player("t.almeida@ctu.gov", "mole");
+
 			playerRepo.save(p1);
 			playerRepo.save(p2);
 			playerRepo.save(p3);
@@ -58,9 +59,16 @@ public class SalvoApplication {
 			GamePlayer gp1 = new GamePlayer(g1,p1);
 			GamePlayer gp2 = new GamePlayer(g1,p2);
 			GamePlayer gp3 = new GamePlayer(g2,p3);
+			GamePlayer gp4 = new GamePlayer(g2,p4);
+			GamePlayer gp5 = new GamePlayer(g3,p2);
+			GamePlayer gp6 = new GamePlayer(g3,p4);
+
 			gamePlayerRepo.save(gp1);
 			gamePlayerRepo.save(gp2);
 			gamePlayerRepo.save(gp3);
+			gamePlayerRepo.save(gp4);
+			gamePlayerRepo.save(gp5);
+			gamePlayerRepo.save(gp6);
 
 
 			List<String> loc1 = new ArrayList<>(Arrays.asList("H1", "H2", "H3"));
@@ -190,9 +198,8 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
             @Override
             public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-                List<Player> players = playerRepo.findByUserName(name);
-                if (!players.isEmpty()) {
-                    Player player = players.get(0);
+                Player player = playerRepo.findByUserName(name);
+                if (player != null) {
                     return new User(player.getUserName(), player.getPassword(),
                             AuthorityUtils.createAuthorityList("USER"));
                 } else {

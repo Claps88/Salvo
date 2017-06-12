@@ -3,9 +3,7 @@ package salvo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -42,18 +40,18 @@ public class SalvoController {
     private Map<String, Object> authInfo(Authentication authentication){
         Map<String, Object> dto = new LinkedHashMap<>();
         if(authentication != null){
-            List<Player> wtv = playerRepo.findByUserName(authentication.getName());
-            Player blabla = wtv.get(0);
-            dto.put("id", blabla.getId());
-            dto.put("userName", blabla.getUserName());
+            Player wtv = playerRepo.findByUserName(authentication.getName());
+
+            dto.put("id", wtv.getId());
+            dto.put("userName", wtv.getUserName());
             return dto;
         }
         else return null;
     }
 
-    private boolean isGuest(Authentication authentication) {
+    /*private boolean isGuest(Authentication authentication) {
         return authentication == null || authentication instanceof AnonymousAuthenticationToken;
-    }
+    }*/
 
     private Map<String, Object> scoreInfo(Player player){
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -96,8 +94,27 @@ public class SalvoController {
         return dto;
     }
 
+    @RequestMapping(path = "game", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> gameCreate(Authentication auth) {
+        Player user = playerRepo.findByUserName(auth.getName());
+        if(user == null){
+            return new ResponseEntity<>(makeMap("error", "no user"), HttpStatus.UNAUTHORIZED);
+        }
+        else{
+            Game newGame = new Game();
+            gameRepo.save(newGame);
+
+            GamePlayer newGp = new GamePlayer(newGame, user);
+            gpRepo.save(newGp);
+
+            return new ResponseEntity<>(makeMap("gamePlayerId", newGp.getId()), HttpStatus.ACCEPTED);
+        }
+    }
+
     @RequestMapping("/game_view/{nn}")
-    public Map<String, Object> gameView(@PathVariable Long nn){
+    public ResponseEntity<Map<String, Object>> gameView(@PathVariable Long nn, Authentication auth){
+
+        Player loggedUser = playerRepo.findByUserName(auth.getName());
         GamePlayer currentGP = gpRepo.findOne(nn);
         Game currentGame = currentGP.getGame();
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -112,8 +129,15 @@ public class SalvoController {
         dto.put("salvoes", currentGame.getGamePlayers().stream()
                 .map(gp -> salvoGPs(gp))
                 .collect(Collectors.toList()));
-        return dto;
+
+        if(loggedUser.getId() == currentGP.getPlayer().getId()){
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(makeMap("error", "Unauthorized"),HttpStatus.UNAUTHORIZED);
+        }
     }
+
 
     private Map<String, Object> findGP(GamePlayer gamePlayer){
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -161,22 +185,61 @@ public class SalvoController {
         return dto2;
     }
 
+   /* @RequestMapping("/prova")
+    public Map<String, Object> checkId(Authentication auth){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        Player player = playerRepo.findByUserName(auth.getName());
+        dto.put("id", player.getId());
+        dto.put("gps Ids", player.getGamePlayers().stream().map(gp -> gp.getId()).collect(Collectors.toList()));
+        return dto;
+    }*/
+
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<String> createPlayer(@RequestParam String userName,@RequestParam String password) {
 
-        List <Player> player = playerRepo.findByUserName(userName);
+        Player player = playerRepo.findByUserName(userName);
         if (userName.isEmpty()) {
             return new ResponseEntity<>("No name given", HttpStatus.FORBIDDEN);
         }
 
-        if (!player.isEmpty()) {
+        if (player != null) {
             return new ResponseEntity<>("Name already used", HttpStatus.CONFLICT);
         }
 
         playerRepo.save(new Player(userName, password));
         return new ResponseEntity<>( userName + "added", HttpStatus.CREATED);
     }
+    private Map<String, Object> makeMap(String key, Object value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(key, value);
+        return map;
+    }
+
+    @RequestMapping(path = "/game/{nn}/players", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> joinGame(@PathVariable long nn, Authentication auth){
+
+        Player thisPl = playerRepo.findByUserName(auth.getName());
+        Game thisGame = gameRepo.findOne(nn);
+
+        if(thisPl == null){
+            return new ResponseEntity<>(makeMap("error", "no current user"), HttpStatus.UNAUTHORIZED);
+        }
+
+        if(thisGame == null){
+            return new ResponseEntity<>(makeMap("error", "no such game"), HttpStatus.FORBIDDEN);
+        }
+        if(thisGame.getGamePlayers().size() == 2){
+            return new ResponseEntity<>(makeMap("error", "game is full"), HttpStatus.FORBIDDEN);
+        }
+
+        GamePlayer thisGp = new GamePlayer(thisGame, thisPl);
+        gpRepo.save(thisGp);
+
+        return new ResponseEntity<>(makeMap("newGpId", thisGp.getId()),HttpStatus.CREATED);
+    }
+
 }
+
 
 
 

@@ -1,19 +1,26 @@
 <!DOCTYPE HTML>
 <html>
-<head> <title>Salvo!</title> </head>
+<head>
+    <title>Salvo!</title>
+    <link rel="stylesheet" href="main.css">
+</head>
 <body>
 
 
 <form id="login-form" onsubmit="return false">
-    <label>Name: <input type="text" name="username"></label>
-    <label>Password: <input type="text" name="password"></label>
+    <label>Username: <input type="text" name="username" id="namein"></label>
+    <label>Password: <input type="text" name="password" id="passw"></label>
     <button id="loginBTN">Log in</button>
+    <button id="signUp">Sign Up</button>
 </form>
 
-<form id="logout-form" onsubmit="return false">
+<form id="logout-form" class="hidden" onsubmit="return false">
     <button id="logoutBTN">Log out</button>
 </form>
+
+<div class="hidden" id="userLogged"></div>
 <ol id="theOL"></ol>
+<button class="hidden" id="createGames">Create Game</button>
 <table id="tabla"></table>
 
 
