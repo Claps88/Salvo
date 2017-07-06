@@ -1,0 +1,67 @@
+#shipPlace {
+    margin-left: 50px;
+    width: 660px;
+    height: 660px;
+}
+
+#cont {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.row {
+    width: auto;
+    display: flex;
+}
+
+.square {
+    width: 60px;
+    height: 60px;
+    outline: 1px solid blue;
+}
+
+.square.vacio {
+    outline: none;
+    text-align: center;
+    line-height: 60px;
+}
+
+h1 {
+    text-align: center;
+}
+
+#shipList {
+    display: flex;
+    align-item: center;
+}
+
+td {
+    width: 110px;
+    text-align: center;
+}
+
+th {
+    text-align: center;
+}
+
+tr {
+    height: 40px;
+}
+
+.table-bordered tbody tr {
+  cursor: pointer;
+}
+
+.table-bordered .table thead tr th {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.table-bordered .table tbody tr td {
+  padding-top: 15px;
+  padding-bottom: 10px;
+}
+
+.hasShip {
+    background-color: black;
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Place your ships</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main2.css">
+</head>
+<body>
+
+<div id="cont">
+    <div id="shipPlace">
+        <h1>Place the ships</h1>
+    </div>
+
+    <div id="shipList">
+        <table class="table table-responsive" id="boaty">
+            <thead>
+            <tr>
+                <th>Number</th>
+                <th>Type</th>
+                <th>Length</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="boat" id="Carrier" data-length="5" data-index="0">
+                <td>1</td>
+                <td>Aircraft Carrier</td>
+                <td>5</td>
+            </tr>
+            <tr class="boat" id="Battleship" data-length="4" data-index="1">
+                <td>1</td>
+                <td>Battleship</td>
+                <td>4</td>
+            </tr>
+            <tr class="boat" id="Submarine" data-length="3" data-index="2">
+                <td>1</td>
+                <td>Submarine</td>
+                <td>3</td>
+            </tr>
+            <tr class="boat" id="Destroyer" data-length="3" data-index="3">
+                <td>1</td>
+                <td>Destroyer</td>
+                <td>3</td>
+            </tr>
+            <tr class="boat" id="PatrolBoat" data-length="2" data-index="4">
+                <td>1</td>
+                <td>Patrol Boat</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>
+                    <div>
+                        <label><input type="radio" id="horiz" name="radioLoc">Horizontal</label>
+                    </div>
+                </td>
+                <td></td>
+                <td>
+                    <div>
+                        <label><input type="radio" id="vert" name="radioLoc" checked="checked"><br>Vertical</label>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button class="butt" id="shipsR">Place the ships again</button>
+        <button class="butt" id="shipsP">Ships placed!</button>
+    </div>
+
+</div>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+<script src="shipping.js"></script>
+
+</body>
+</html>

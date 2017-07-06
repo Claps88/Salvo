@@ -19,7 +19,6 @@ $(function() {
 
         $listSelector = $("#theOL");
         console.log(data);
-        //Is this working??
         if(data.currentPlayer != null){
             var cpId = data.currentPlayer.id;
             console.log(data.games);
@@ -217,6 +216,43 @@ $(function() {
               //  location.reload();
                 location.href = "game.html?gp=" + data.gamePlayerId;
             })
+    }
+
+   /* function postShip(){
+
+        var constr = [ { "shipType": "destroyer", "location": ["A1", "B1", "C1"] },
+                       { "shipType": "patrol boat", "location": ["H5", "H6"] }
+                     ]
+
+        $.ajax({
+            url : "api/games/players/gpid/ships",
+            type: "POST",
+            contentType: "application/json",
+            data : JSON.stringify(constr),
+            success: function(data, textStatus, jqXHR)
+            {
+                alert("It Worked!")
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                alert("NOPE")
+            }
+        });
+    }*/
+
+    function postShip(array){
+
+        $.post({
+          url: "api/games/players/gpid/ships",
+          data: JSON.stringify(array),//This would be a constr example{ "shipType": "destroyer", "location": ["A1", "B1", "C1" }
+          contentType: "application/json"
+        })
+        .done(function (response, status, jqXHR) {
+          alert( "Ships added: " + response );
+        })
+        .fail(function (jqXHR, status, httpError) {
+          alert("Failed to add ships: " + textStatus + " " + httpError);
+        })
     }
 
 
